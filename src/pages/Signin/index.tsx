@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import styles from './styles.module.scss'
 import AsideImage from '../../assets/discoverable.svg'
 
@@ -13,7 +14,7 @@ export function Signin(){
               <input type="password" placeholder="Password" />
               <button>Sign in</button>
             </form>
-            <span className={styles.signupText}>Don't have an account yet? <a href="#">Sign up</a></span>
+            <span className={styles.signupText}>Don't have an account yet? <Link to="/signup">Sign up</Link></span>
           </div>
           <div className={styles.divisor}>
             <div></div>
