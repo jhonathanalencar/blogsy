@@ -1,23 +1,22 @@
 import { Request, Response } from 'express'
+import { BadRequestError } from '../errors'
 import { AuthenticateUserService } from '../services/AuthenticateUserService'
+import { StatusCodes } from 'http-status-codes'
 
 class AuthenticateUserController{
   async handle(req: Request, res: Response){
     const { email, password } = req.body
 
-    if(!email || !password){
-      throw new Error('Please provide email and password')
+    if(!email || email.trim() === ''){
+      throw new BadRequestError('Please provide email')
+    }else if(!password || password.trim() === ''){
+      throw new BadRequestError('Please provide password')
     }
 
     const service = new AuthenticateUserService()
 
-    try{
-      const result = await service.execute(email, password)
-      return res.status(200).json(result)
-    }catch(error){
-      return res.status(400).json({error: error.message})
-    }
-
+    const result = await service.execute(email, password)
+    return res.status(StatusCodes.OK).json(result)
   }
 }
 

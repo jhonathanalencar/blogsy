@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
+import { BadRequestError } from '../errors'
 import { RegisterUserService } from '../services/RegisterUserService'
+import { StatusCodes } from 'http-status-codes'
 
 class RegisterUserController{
   async handle(req: Request, res: Response){
@@ -7,16 +9,17 @@ class RegisterUserController{
 
     const service = new RegisterUserService()
 
-    if(!name || !email || !password){
-      throw new Error('Please provide name, email and password')
+    if(!name || name.trim() === ''){
+      throw new BadRequestError('Please provide name')
+    }else if(!email || email.trim() === ''){
+      throw new BadRequestError('Please provide email')
+    }else if(!password || password.trim() === ''){
+      throw new BadRequestError('Please provide password')
     }
 
-    try{
-      const result = await service.execute(name, email, password)
-      return res.status(201).json(result)
-    }catch(error){
-      return res.status(401).json({ error: error.message })
-    }
+    const result = await service.execute(name, email, password)
+    return res.status(StatusCodes.CREATED).json(result)
+
   }
 }
 

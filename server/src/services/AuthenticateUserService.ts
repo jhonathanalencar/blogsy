@@ -1,3 +1,4 @@
+import { UnauthenticatedError } from "../errors"
 import { User } from "../models/User"
 
 class AuthenticateUserService{
@@ -6,12 +7,12 @@ class AuthenticateUserService{
     const user = await User.findOne({ email })
 
     if(!user){
-      throw new Error('User is not registered')
+      throw new UnauthenticatedError('User is not registered')
     }
 
     const isPasswordCorrect = await user.comparePassword(password)
     if(!isPasswordCorrect){
-      throw new Error('Invalid credentials')
+      throw new UnauthenticatedError('Invalid credentials')
     }
 
     const token = user.createJWT()

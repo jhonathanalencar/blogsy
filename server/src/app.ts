@@ -4,6 +4,7 @@ import 'express-async-errors'
 import { connectDB } from './db/connect';
 import { router } from './routes';
 import { authenticationMiddleware } from './middlewares/ensureAuthenticated'
+import { errorHandlerMiddleware } from './middlewares/errorHandler';
 
 const app = express()
 
@@ -12,6 +13,7 @@ app.use(express.json())
 app.use(router)
 
 app.use(authenticationMiddleware)
+app.use(errorHandlerMiddleware)
 
 const port = process.env.PORT || 4000
 

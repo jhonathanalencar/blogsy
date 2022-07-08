@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { verify } from 'jsonwebtoken'
+import { UnauthenticatedError } from '../errors';
 
 interface IPayload{
   userId: string;
@@ -17,7 +18,7 @@ const authenticationMiddleware = async(req: Request & IUserRequest, res: Respons
   const authHeader = req.headers.authorization
 
   if(!authHeader || !authHeader.startsWith('Bearer ')){
-    throw new Error('No token provided')
+    throw new UnauthenticatedError('No token provided')
   }
 
   const [, token] = authHeader.split(' ')
@@ -26,9 +27,9 @@ const authenticationMiddleware = async(req: Request & IUserRequest, res: Respons
     const payload = verify(token, process.env.JWT_SECRET) as IPayload
 
     req.user = { userId: payload.userId, name: payload.name }
-    return next()
+    next()
   }catch(error){
-    throw new Error('Not authorized to access this route')
+    throw new UnauthenticatedError('Not authorized to access this route')
   }
 }
 
