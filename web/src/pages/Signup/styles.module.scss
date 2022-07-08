@@ -47,6 +47,7 @@
   strong{
     font-size: 2rem;
     letter-spacing: .1rem;
+    text-align: center;
   }
 
   span{
@@ -54,8 +55,10 @@
     margin-bottom: 2rem;
 
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     gap: .25rem;
+    text-align: center;
   
     a {
       color: #f1a7b5;
@@ -70,6 +73,11 @@
   .errorText{
     display: block;
     margin-bottom: 1rem;
+    color: #cc3321;
+    text-transform: capitalize;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
   }
 
   form{
@@ -111,7 +119,10 @@
       background-color: #94ecd3;
       color: #fff;
       cursor: pointer;
-      transition: all .3s ease-in-out;
+      // transition: all .3s ease-in-out;
+      min-width: 8rem;
+      display: flex;
+      justify-content: center;
 
       &:hover{
         background-color: #fff;

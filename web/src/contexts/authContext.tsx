@@ -5,6 +5,7 @@ import { api } from "../services/api";
 interface AuthContextData{
   user: UserType | null;
   error: string;
+  isLoading: boolean;
   signUp: (name: string, email: string, password: string) => void
   signOut: () => void
   changeError: (message: string) => void
@@ -31,15 +32,17 @@ export const AuthContext = createContext({} as AuthContextData)
 export function AuthContextProvider({children}: AuthContextProviderProps){
   const [user, setUser] = useState<UserType | null>(null)
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   async function signUp(name: string, email: string, password: string){
+    setIsLoading(true)
     try{
       const response = await api.post<SignupResponse>('/register', { name, email, password })
-      const { token, user } = response.data
+      const { user } = response.data
 
-      localStorage.setItem('@blogsy:token', token)
+      // localStorage.setItem('@blogsy:token', token)
 
-      api.defaults.headers.common.authorization = `Bearer ${token}`
+      // api.defaults.headers.common.authorization = `Bearer ${token}`
 
       setUser(user)
       changeError('')
@@ -47,6 +50,7 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
       const { data } = error.response
       setError(data.msg)
     }
+    setIsLoading(false)
   }
 
   function signOut(){
@@ -62,6 +66,7 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
     <AuthContext.Provider value={{
       user,
       error,
+      isLoading,
       signUp,
       signOut,
       changeError

@@ -2,13 +2,14 @@ import { FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import styles from './styles.module.scss'
+import { Loader } from '../../components/Loader'
 
 export function Signup(){
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
-  const { signUp, error, changeError, user } = useAuth()
+  const { signUp, error, changeError, user, isLoading } = useAuth()
 
   function handleSubmit(e: FormEvent){
     e.preventDefault()
@@ -17,16 +18,18 @@ export function Signup(){
       return;
     }
 
-    if(signUp){
+    if(signUp && changeError){
       signUp(name, email, password)    
       changeError('')
+      if(user){
+        navigate('/signin')
+      }
     }  
   }
 
   useEffect(() =>{
     const token = localStorage.getItem('@blogsy:token')
     if(token){
-      navigate('/signin')
     }
   }, [user])
 
@@ -72,7 +75,9 @@ export function Signup(){
                   onChange={e => setPassword(e.target.value)}
                 />
               </label>
-              <button type="submit">Sign up</button>
+              <button type="submit">
+                {isLoading ? <Loader /> : 'Sign up'}
+              </button>
             </form>
           </div>
         </div>
