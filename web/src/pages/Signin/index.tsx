@@ -1,21 +1,38 @@
 import { Link } from 'react-router-dom'
 import styles from './styles.module.scss'
 import AsideImage from '../../assets/discoverable.svg'
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
+import { Loader } from '../../components/Loader'
 
 export function Signin(){
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const { signOut, user } = useAuth()
+  const { signOut, user, isLoading, signIn, error, changeError } = useAuth()
+  const token = localStorage.getItem('@blogsy:token')
+
+  
+  function handleSubmit(e: FormEvent){
+    e.preventDefault()
+
+    if(signIn){
+      signIn(email, password)
+    }
+  }
 
   useEffect(() =>{
-    const token = localStorage.getItem('@blogsy:token')
-
     if(token){
       setIsAuthenticated(true)
+      setEmail('')
+      setPassword('')
     }else{
       setIsAuthenticated(false)
     }
+  }, [token])
+
+  useEffect(() =>{
+    changeError('')
   }, [])
 
   return(
@@ -24,22 +41,40 @@ export function Signin(){
         <div className={styles.center}>
           <div className={styles.loginWrapper}>
             <strong>Welcome to <span>blogsy</span></strong>
-            {!user ? (
+            {!isAuthenticated ? (
               <>
-                <form>
-                  <input type="email" placeholder="Email" autoComplete="current-email" />
-                  <input type="password" placeholder="Password" autoComplete="current-password" />
-                  <button type="submit">Sign in</button>
+                <span className={styles.errorText}>{error}</span>
+                <form onSubmit={handleSubmit}>
+                  <input 
+                    type="email" 
+                    placeholder="Email" 
+                    autoComplete="current-email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)} 
+                  />
+                  <input 
+                    type="password" 
+                    placeholder="Password" 
+                    autoComplete="current-password" 
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                  />
+                  <button type="submit">
+                    {isLoading ? <Loader /> : 'Sign in'}
+                  </button>
                 </form>
                 <span className={styles.signupText}>Don't have an account yet? <Link to="/signup">Sign up</Link></span>
               </>
             ) : (
-              <button 
-                type="button" 
-                className={styles.signOutButton}
-                onClick={signOut}
-              >
-                Sign out</button>
+              <div className={styles.createButtonWrapper}>
+                <button>Create a blog</button>
+                <button 
+                  type="button" 
+                  className={styles.signOutButton}
+                  onClick={signOut}
+                >
+                  Sign out</button>
+              </div>
             )}
           </div>
           <div className={styles.divisor}>

@@ -21,17 +21,20 @@ export function Signup(){
     if(signUp && changeError){
       signUp(name, email, password)    
       changeError('')
-      if(user){
-        navigate('/signin')
-      }
     }  
   }
 
   useEffect(() =>{
     const token = localStorage.getItem('@blogsy:token')
+
     if(token){
+      navigate('/signin')
     }
   }, [user])
+
+  useEffect(() =>{
+    changeError('')
+  }, [])
 
   return(
     <div className={styles.container}>

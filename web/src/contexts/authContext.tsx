@@ -7,6 +7,7 @@ interface AuthContextData{
   error: string;
   isLoading: boolean;
   signUp: (name: string, email: string, password: string) => void
+  signIn: (email: string, password: string) => void
   signOut: () => void
   changeError: (message: string) => void
 }
@@ -22,7 +23,7 @@ interface UserType{
   password: string;
 }
 
-interface SignupResponse{
+interface Response{
   token: string;
   user: UserType;
 }
@@ -33,22 +34,43 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
   const [user, setUser] = useState<UserType | null>(null)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   async function signUp(name: string, email: string, password: string){
     setIsLoading(true)
     try{
-      const response = await api.post<SignupResponse>('/register', { name, email, password })
-      const { user } = response.data
+      const response = await api.post<Response>('/register', { name, email, password })
+      const { user, token } = response.data
 
       // localStorage.setItem('@blogsy:token', token)
 
       // api.defaults.headers.common.authorization = `Bearer ${token}`
 
-      setUser(user)
+      // setUser(user)
       changeError('')
+      navigate('/signin')
     }catch(error: any){
       const { data } = error.response
       setError(data.msg)
+    }
+    setIsLoading(false)
+  }
+
+  async function signIn(email: string, password: string){
+    setIsLoading(true)
+    try{
+      const response = await api.post<Response>('/authenticate', { email, password })
+      const { token, user } = response.data
+
+      api.defaults.headers.common.authorization = `Bearer ${token}`
+      localStorage.setItem('@blogsy:token', token)
+
+      setUser(user)
+      changeError('')
+    }catch(error: any){
+      const { response } = error
+      
+      changeError(response.data.msg)
     }
     setIsLoading(false)
   }
@@ -68,6 +90,7 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
       error,
       isLoading,
       signUp,
+      signIn,
       signOut,
       changeError
     }}>
