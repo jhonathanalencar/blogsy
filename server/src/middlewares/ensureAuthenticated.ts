@@ -27,7 +27,7 @@ const authenticationMiddleware = async(req: Request & IUserRequest, res: Respons
     const payload = verify(token, process.env.JWT_SECRET) as IPayload
 
     req.user = { userId: payload.userId, name: payload.name }
-    next()
+    return next()
   }catch(error){
     throw new UnauthenticatedError('Not authorized to access this route')
   }
