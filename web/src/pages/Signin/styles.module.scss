@@ -1,0 +1,234 @@
+.container{
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+.main{
+  flex: 2;
+}
+
+.center{
+  height: 100%;
+  width: 80vw;
+  max-width: 500px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+
+.loginWrapper{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  strong{
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 500;
+    text-align: center;
+    color: #2b2b2b;
+
+    span{
+      color: #bd98c5;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+  }
+
+  form{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    
+    input{
+      height: 3rem;
+      border-radius: .25rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      background-color: #f8f5f9;
+      border: .0625rem solid #a9757f;
+      color: #555555;
+
+      &:focus{
+        outline: none;
+      }
+    }
+
+    button{
+      height: 3rem;
+      font-size: 1.25rem;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      border: .0625rem solid #94ecd3;
+      border-radius: .25rem;
+      background-color: #94ecd3;
+      color: #fff;
+      transition: all .3s ease-in-out;
+
+      &:hover{
+        background-color: #85d4be;
+        border-color: #85d4be;
+      }
+    }
+  }
+
+  .signupText{
+    font-size: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .25rem;
+    color: #2b2b2b;
+
+    a{
+      color: #f1a7b5;
+      transition: color .3s ease-in-out;
+
+      &:hover{
+        color: #c18691;
+      }
+    }
+  }
+}
+
+.divisor{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  margin-block: 2rem;
+
+  div{
+    height: .1rem;
+    width: 100%;
+    background-color: #bd98c5;
+  }
+
+  span{
+    text-transform: uppercase;
+    font-weight: 500;
+    color: #2b2b2b;
+  }
+}
+
+.codeInputWrapper{
+  width: 100%;
+    max-width: 400px;
+
+  strong{
+    color: #2b2b2b;
+    font-size: 1.25rem;
+    text-align: center;
+    display: block;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: .1rem;
+  }
+
+  .codeInput{
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    input{
+      width: 100%;
+      max-width: 200px;
+      height: 2rem;
+      border-radius: 0;
+      padding: .5rem 1rem;
+      border: .0625rem solid #a9757f;
+      color: #555555;
+      border-top-left-radius: .25rem;
+      border-bottom-left-radius: .25rem;
+      border-right: none;
+      font-size: 1rem;
+
+      &:focus{
+        outline: none;
+      }
+    }
+
+    button{
+      height: 2rem;
+      border-radius: 0;
+      border: none;
+      padding: 0rem 1rem;
+      border: .0625rem solid #f1a7b5;
+      font-size: 1rem;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: #fff;
+      background-color: #f1a7b5;
+      cursor: pointer;
+      border-top-right-radius: .25rem;
+      border-bottom-right-radius: .25rem;
+      transition: all .3s ease-in-out;
+
+      &:hover{
+        background-color: #fff;
+        color: #f1a7b5;
+      }
+    }
+  }
+}
+
+.aside{
+  display: none;
+  flex: 1.5;
+  background-color: #94ecd3;
+  color: #fff;
+  background: linear-gradient(45deg, #bd98c5, #f1a7b5, #94ecd3);
+  background-size: 200% 200%;
+  animation: bgGradient 20s ease infinite;
+
+  @keyframes bgGradient{
+    0%{
+      background-position: 0% 50%;
+    }
+    50%{
+      background-position: 100% 50%;
+    }
+    100%{
+      background-position: 0% 50%;
+    }
+  }
+
+  @media (min-width: 1050px){
+    display: flex;
+  }
+}
+
+.asideWrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  strong {
+    display: block;
+    font-size: 3rem;
+    text-transform: capitalize;
+  }
+  
+  span {
+    display: block;
+    font-size: 1.5rem;
+    margin-bottom: 3rem;
+    letter-spacing: .1rem;
+  }
+
+  img {
+    width: 25rem;
+  }
+
+}
