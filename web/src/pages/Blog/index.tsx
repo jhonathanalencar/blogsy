@@ -1,11 +1,21 @@
 import { Post } from '../../components/Post'
 import styles from './styles.module.scss'
-import { GoSearch } from 'react-icons/go'
+import { GoSearch, GoSignOut } from 'react-icons/go'
 import { BiCopy } from 'react-icons/bi'
+import { useAuth } from '../../hooks/useAuth'
 
 export function Blog(){
+  const { signOut } = useAuth()
+
   return(
     <div className={styles.container}>
+      <button
+        type="button" 
+        className={styles.signoutButton}
+        onClick={signOut}
+      >
+        <GoSignOut />
+      </button>
       <nav>
         <div className={styles.navCenter}>
           <header>
