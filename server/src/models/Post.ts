@@ -31,6 +31,7 @@ const PostSchema = new mongoose.Schema<IPost>({
   },
   isFavorited: {
     type: Boolean,
+    default: false
   }
 })
 
