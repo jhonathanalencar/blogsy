@@ -33,7 +33,9 @@ export function Signup(){
   }, [user])
 
   useEffect(() =>{
-    changeError('')
+    if(changeError){
+      changeError('')
+    }
   }, [])
 
   return(

@@ -1,11 +1,15 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from './styles.module.scss'
 import AsideImage from '../../assets/discoverable.svg'
 import { FormEvent, useEffect, useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { Loader } from '../../components/Loader'
+import { useBlog } from '../../hooks/useBlog'
 
 export function Signin(){
+  const [blogName, setBlogName] = useState('')
+  const { createBlog, blog } = useBlog()
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -16,8 +20,29 @@ export function Signin(){
   function handleSubmit(e: FormEvent){
     e.preventDefault()
 
-    if(signIn){
+    if(email.trim() === '' || password.trim() === ''){
+      if(changeError){
+        changeError('Please fill out all fields')
+      }
+      return;
+    }
+
+    if(signIn && changeError){
       signIn(email, password)
+      changeError('')
+    }
+  }
+
+  function handleCreateBlog(){
+    if(blogName.trim() === ''){
+      if(changeError){
+        changeError('Please insert blog name')
+      }
+      return;
+    }
+    console.log(user)
+    if(createBlog && user){
+      createBlog(blogName, user.id)
     }
   }
 
@@ -32,8 +57,19 @@ export function Signin(){
   }, [token])
 
   useEffect(() =>{
-    changeError('')
+    if(changeError){
+      changeError('')
+    }
+    console.log(blog)
   }, [])
+
+  useEffect(() =>{
+    if(blog){
+      const blogId = blog._id
+      navigate(`/blog/${blogId}`)
+    }
+  }, [blog])
+
 
   return(
     <div className={styles.container}>
@@ -66,8 +102,25 @@ export function Signin(){
                 <span className={styles.signupText}>Don't have an account yet? <Link to="/signup">Sign up</Link></span>
               </>
             ) : (
-              <div className={styles.createButtonWrapper}>
-                <button>Create a blog</button>
+              <div className={styles.createBlogWrapper}>
+                <span className={styles.errorText}>{error}</span>
+                <div className={styles.createButtonWrapper}>
+                  {!blog && (
+                    <input 
+                      type="text" 
+                      placeholder="Blog name"
+                      autoComplete="new-blog"
+                      value={blogName}
+                      onChange={e => setBlogName(e.target.value)}
+                    />
+                  )}
+                  <button 
+                    type="button"
+                    className={styles.createButton}
+                    onClick={handleCreateBlog}
+                  >
+                    Create a blog</button>
+                </div>
                 <button 
                   type="button" 
                   className={styles.signOutButton}

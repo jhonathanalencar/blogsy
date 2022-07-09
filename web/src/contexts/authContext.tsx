@@ -51,7 +51,12 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
       navigate('/signin')
     }catch(error: any){
       const { data } = error.response
-      setError(data.msg)
+
+      if(data?.msg){
+        setError(data.msg)
+      }else{
+        setError('Something went wrong. Please try later.')
+      }
     }
     setIsLoading(false)
   }
@@ -68,9 +73,13 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
       setUser(user)
       changeError('')
     }catch(error: any){
-      const { response } = error
-      
-      changeError(response.data.msg)
+      const { data } = error.response
+
+      if(data?.msg){
+        setError(data.msg)
+      }else{
+        setError('Something went wrong. Please try later.')
+      }
     }
     setIsLoading(false)
   }
@@ -83,6 +92,18 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
   function changeError(message: string){
     setError(message)
   }
+
+  useEffect(() =>{
+    const token = localStorage.getItem('@blogsy:token')
+
+    if(token){
+      api.defaults.headers.common.authorization = `Bearer ${token}`
+
+      api.get<UserType>('/user').then(response =>{
+        setUser(response.data)
+      })
+    }
+  }, [])
 
   return(
     <AuthContext.Provider value={{
