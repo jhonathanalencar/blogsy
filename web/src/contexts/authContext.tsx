@@ -6,6 +6,7 @@ interface AuthContextData{
   user: UserType | null;
   error: string;
   isLoading: boolean;
+  changeIsLoading: (bool: boolean) => void
   signUp: (name: string, email: string, password: string) => void
   signIn: (email: string, password: string) => void
   signOut: () => void
@@ -93,6 +94,10 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
     setError(message)
   }
 
+  function changeIsLoading(bool: boolean){
+    setIsLoading(bool)
+  }
+
   useEffect(() =>{
     const token = localStorage.getItem('@blogsy:token')
 
@@ -110,6 +115,7 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
       user,
       error,
       isLoading,
+      changeIsLoading,
       signUp,
       signIn,
       signOut,

@@ -40,7 +40,7 @@ export function Signin(){
       }
       return;
     }
-    console.log(user)
+
     if(createBlog && user){
       createBlog(blogName, user.id)
     }
@@ -60,13 +60,11 @@ export function Signin(){
     if(changeError){
       changeError('')
     }
-    console.log(blog)
   }, [])
 
   useEffect(() =>{
     if(blog){
-      const blogId = blog._id
-      navigate(`/blog/${blogId}`)
+      navigate(`/blog/${blog._id}`)
     }
   }, [blog])
 
@@ -119,7 +117,8 @@ export function Signin(){
                     className={styles.createButton}
                     onClick={handleCreateBlog}
                   >
-                    Create a blog</button>
+                    {isLoading ? <Loader /> : 'Create a blog'}
+                  </button>
                 </div>
                 <button 
                   type="button" 
