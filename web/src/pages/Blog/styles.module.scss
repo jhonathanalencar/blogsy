@@ -1,3 +1,142 @@
 .container{
-  color: bisque;
+  min-height: 100vh;
+  width: 100%;
+  color: #2b2b2b;
+  background-color: #eaeaea;
+}
+
+nav{
+  background: linear-gradient(90deg,#bd98c5,#f1a7b5);
+  background-size: 200% 200%;
+  animation: bgGradiente 20s ease-in-out infinite;
+  
+
+  @keyframes bgGradiente {
+    0%{
+      background-position: 0% 50%;
+    }
+    50%{
+      background-position: 100% 50%;
+    }
+    100%{
+      background-position: 0% 50%;
+    }
+  }
+}
+
+.navCenter{
+  width: 90vw;
+  max-width: 900px;
+  margin: auto;
+  padding: 2rem 0;
+
+  header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    color: #fff;
+
+    strong{
+      font-size: 2rem;
+    }
+  }
+
+  .code{
+    background-color: #94ecd3;
+    color: #fff;
+    border-radius: .25rem;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span{
+      font-size: 1rem;
+      text-transform: capitalize;
+      padding: 0 .5rem;
+      letter-spacing: .1rem;
+      font-weight: bold;
+    }
+
+    button{
+      height: 100%;
+      padding: .5rem;
+      font-size: 1.25rem;
+      border: none;
+      border-radius: .25rem;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      text-transform: uppercase;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #fff;
+      transition: color .3s ease-in-out;
+
+      &:hover{
+        color: #bd98c5;
+      }
+    }
+  }
+
+  .searchForm{
+    width: 100%;
+    padding: .75rem 1rem;
+    border-radius: .25rem;
+    display: flex;
+    align-items: center;
+    background-color: #f8f5f9;
+    border: .0625rem solid #a9757f;
+    color: #555555;
+
+    input{
+      flex: 9;
+      height: 2rem;
+      border-radius: 0;
+      border: none;
+      background: none;
+      font-size: 1rem;
+      padding-left: .5rem;
+      
+
+      &:focus{
+        outline: none;
+      }
+    }
+
+    button{
+      flex: 1;
+      border-radius: 0;
+      border: none;
+      background: none;
+      color: #bd98c5;
+      font-size: 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  }
+}
+
+.main{
+  width: 100%;
+}
+
+.mainCenter{
+  width: 90vw;
+  max-width: 900px;
+  margin: auto;
+  padding-block: 3rem;
+}
+
+.postsWrapper{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 }
