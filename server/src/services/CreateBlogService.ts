@@ -1,5 +1,6 @@
 import { BadRequestError } from "../errors";
 import { Blog } from "../models/Blog";
+import { Post } from "../models/Post";
 
 class CreateBlogService {
   async execute(name: string, userId: string){
@@ -10,6 +11,7 @@ class CreateBlogService {
     }
 
     const hasBlog = await Blog.findOne({ createdBy: userId })
+    
     if(hasBlog){
       throw new BadRequestError('User already has a blog')
     }

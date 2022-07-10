@@ -16,6 +16,6 @@ router.get('/user', authenticationMiddleware, new GetUserController().handle)
 
 router.post('/createBlog', authenticationMiddleware, new CreateBlogController().handle)
 router.get('/blog', authenticationMiddleware, new GetBlogController().handle)
-router.get('/blogId', authenticationMiddleware, new GetBlogByIdController().handle)
+router.post('/blogId', new GetBlogByIdController().handle)
 
 router.post('/createPost', authenticationMiddleware, new CreatePostController().handle)

@@ -1,8 +1,9 @@
-import mongoose from 'mongoose'
+import mongoose, { Types } from 'mongoose'
+import { IPost, Post } from './Post';
 
 interface IBlog{
   name: string;
-  posts: mongoose.Schema.Types.ObjectId[]
+  posts: Types.DocumentArray<IPost>
   createdBy:  mongoose.Schema.Types.ObjectId;
 }
 
@@ -14,7 +15,7 @@ const BlogSchema = new mongoose.Schema<IBlog>({
     trim: true,
     unique: true
   },
-  posts: [mongoose.Schema.Types.ObjectId],
+  posts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

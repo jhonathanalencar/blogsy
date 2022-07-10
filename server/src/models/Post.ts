@@ -1,11 +1,12 @@
 import mongoose from 'mongoose'
 
-interface IPost{
+export interface IPost{
   title: string;
   text: string;
   publishedAt: Date;
   isFavorited: boolean;
-  createdBy: mongoose.Types.ObjectId;
+  createdBy: mongoose.Schema.Types.ObjectId;
+  createdAtBlog: mongoose.Schema.Types.ObjectId;
 }
 
 const PostSchema = new mongoose.Schema<IPost>({
@@ -28,6 +29,11 @@ const PostSchema = new mongoose.Schema<IPost>({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: [true, 'Please provide user']
+  },
+  createdAtBlog: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Blog',
+    required: true
   },
   isFavorited: {
     type: Boolean,
