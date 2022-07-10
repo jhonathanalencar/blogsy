@@ -1,24 +1,25 @@
 import { Post } from '../../components/Post'
 import styles from './styles.module.scss'
-import { GoSearch, GoSignOut } from 'react-icons/go'
+import { GoSearch, GoSignIn, GoSignOut } from 'react-icons/go'
 import { BiCopy } from 'react-icons/bi'
 import { useAuth } from '../../hooks/useAuth'
 import { useBlog } from '../../hooks/useBlog'
 import { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Loader } from '../../components/Loader'
 
 export function Blog(){
-  const { signOut, isLoading } = useAuth()
+  const { signOut, isLoading, user } = useAuth()
   const { blog, getBlogById, specificBlog } = useBlog()
   const params = useParams()
+  const navigate = useNavigate()
   
   useEffect(() =>{
     if(params && params.id && getBlogById){
       getBlogById(params.id)
     }
   }, [])
-
+  
   if(!specificBlog || isLoading){
     return(
       <Loader />
@@ -31,9 +32,12 @@ export function Blog(){
       <button
         type="button" 
         className={styles.signoutButton}
-        onClick={signOut}
+        onClick={user ? signOut : () => navigate('/signin')}
       >
-        <GoSignOut />
+        {user ? <GoSignOut /> : <GoSignIn /> }
+        <span>
+         {user ? 'sign out' : 'sign in'}
+        </span>
       </button>
       <nav>
         <div className={styles.navCenter}>
@@ -41,7 +45,10 @@ export function Blog(){
             <strong>{specificBlog.name}</strong>
             <div className={styles.code}>
               <span>code</span>
-              <button>
+              <button
+                type="button"
+                onClick={() => navigator.clipboard.writeText(`${specificBlog._id}`)}
+              >
                 <BiCopy />
               </button>
             </div>
@@ -56,12 +63,17 @@ export function Blog(){
       </nav>
       <main className={styles.main}>
         <div className={styles.mainCenter}>
-          <div className={styles.postsWrapper}>
-            <Post />
-            <Post />
-            <Post />
-            <Post />
-          </div>
+          {specificBlog.posts.length > 0 ? (
+            <div className={styles.postsWrapper}>
+              {specificBlog.posts.map((post) =>{
+                return(
+                  <Post />
+                )
+              })}
+            </div>
+          ) : (
+            <strong className={styles.emptyListText}>No posts yet</strong>
+          )}
         </div>
       </main>
     </div>

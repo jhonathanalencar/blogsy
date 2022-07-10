@@ -8,7 +8,7 @@ import { useBlog } from '../../hooks/useBlog'
 
 export function Signin(){
   const [blogName, setBlogName] = useState('')
-  const { createBlog, blog } = useBlog()
+  const { createBlog, blog, currentBlogCode } = useBlog()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -63,8 +63,12 @@ export function Signin(){
   }, [])
 
   useEffect(() =>{
-    if(blog){
-      navigate(`/blog/${blog._id}`)
+    if(blog && user){
+      if(currentBlogCode){
+        navigate(`/blog/${currentBlogCode}`)
+      }else{
+        navigate(`/blog/${blog._id}`)
+      }
     }
   }, [blog])
 

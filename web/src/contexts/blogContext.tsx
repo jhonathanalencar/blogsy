@@ -6,6 +6,7 @@ import { api } from "../services/api";
 interface BlogContextData{
   blog: BlogType | null;
   specificBlog: BlogType | null;
+  currentBlogCode: string;
   createBlog: (name: string, userId: string) => void
   getBlogById: (blogId: string) => void
 }
@@ -38,6 +39,7 @@ export const BlogContext = createContext({} as BlogContextData)
 export function BlogContextProvider({children}: BlogContextProviderProps){
   const [blog, setBlog] = useState<BlogType | null>(null)
   const [specificBlog, setSpecificBlog] = useState<BlogType | null>(null)
+  const [currentBlogCode, setCurrentBlogCode] = useState('')
   const { changeError, changeIsLoading} = useAuth()
   const navigate = useNavigate()
 
@@ -59,15 +61,16 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
   async function getBlogById(blogId: string){
     changeIsLoading(true)
     try{
-      const token = localStorage.getItem('@blogsy:token')
-      console.log(blogId)
-      if(token){
-        api.defaults.headers.common.authorization = `Bearer ${token}`
+      // const token = localStorage.getItem('@blogsy:token')
+      
+      // if(token){
+        // api.defaults.headers.common.authorization = `Bearer ${token}`
         const response = await api.post<BlogTypeResponse>('/blogId', { blogId })
         const { data } = response
-        console.log(data)
+        
         setSpecificBlog(data.blog)
-      }
+        setCurrentBlogCode(data.blog._id)
+      // }
     }catch(error: any){
       console.log(error)
     }
@@ -92,6 +95,7 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
     <BlogContext.Provider value={{
       blog,
       specificBlog,
+      currentBlogCode,
       createBlog,
       getBlogById
     }}>

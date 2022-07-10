@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useBlog } from "../hooks/useBlog";
 import { api } from "../services/api";
 
 interface AuthContextData{
@@ -36,6 +37,7 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const { currentBlogCode } = useBlog()
 
   async function signUp(name: string, email: string, password: string){
     setIsLoading(true)
@@ -73,6 +75,9 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
 
       setUser(user)
       changeError('')
+      if(currentBlogCode){
+        navigate(`/blog/${currentBlogCode}`)
+      }
     }catch(error: any){
       const { data } = error.response
 
