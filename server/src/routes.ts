@@ -4,7 +4,7 @@ import { CreateBlogController } from './controllers/CreateBlogController'
 import { CreatePostController } from './controllers/CreatePostController'
 import { GetBlogByIdController } from './controllers/GetBlogByIdController'
 import { GetBlogController } from './controllers/GetBlogController'
-import { GetUserController } from './controllers/GetUserService'
+import { GetUserController } from './controllers/GetUserController'
 import { RegisterUserController } from './controllers/RegisterUserController'
 import { authenticationMiddleware } from './middlewares/ensureAuthenticated'
 

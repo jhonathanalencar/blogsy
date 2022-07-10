@@ -4,7 +4,7 @@ import { GetUserService } from '../services/GetUserService';
 
 interface UserRequest{
    user: {
-    userId: string;
+    _id: string;
     name: string;
   }
 }
@@ -12,10 +12,10 @@ interface UserRequest{
 class GetUserController{
   async handle(req: Request & UserRequest, res: Response){
 
-    const { userId } = req.user
+    const { _id } = req.user
 
     const service = new GetUserService()
-    const result = await service.execute(userId)
+    const result = await service.execute(_id)
 
     return res.status(StatusCodes.OK).json(result)
   }
