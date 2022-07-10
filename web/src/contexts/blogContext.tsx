@@ -15,7 +15,9 @@ interface BlogContextData{
   changeIsEditingState: (state: boolean) => void;
   createBlog: (name: string, userId: string) => void;
   getBlogById: (blogId: string) => void;
-  createPost: (title: string, text: string, blogId: string) => void;
+  createPost: (blogId: string, title: string, text: string) => void;
+  updatePost: (blogId: string, postId: string, title: string, text: string) => void;
+  deletePost: (blogId: string, postId: string) => void;
 }
 
 interface BlogContextProviderProps{
@@ -90,11 +92,41 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
   async function createPost(title: string, text: string, blogId: string){
     changeIsLoading(true)
     try{
-      await api.post('/createPost', { title, text })
+      await api.post('/post', { title, text })
 
       await getBlogById(blogId)
       closeModal()
       changeError('')
+    }catch(error: any){
+      const { data } = error.response
+      changeError(data.msg)
+    }
+    changeIsLoading(false)
+  }
+
+  async function updatePost(blogId: string, postId: string, title: string, text: string){
+    changeIsLoading(true)
+    try{
+      await api.patch('/post', { postId, title, text })
+      await getBlogById(blogId)
+      closeModal()
+      changeError('')
+    }catch(error: any){
+      const { data } = error.response
+      changeError(data.msg)
+    }
+    changeIsLoading(false)
+  }
+
+  async function deletePost(blogId: string, postId: string){
+    changeIsLoading(true)
+    try{
+      await api.delete('/post', {data: { postId }})
+
+      await getBlogById(blogId)
+      closeModal()
+      changeError('')
+      setIsEditing(false)
     }catch(error: any){
       const { data } = error.response
       changeError(data.msg)
@@ -145,7 +177,9 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
       changeIsEditingState,
       createBlog,
       getBlogById,
-      createPost
+      createPost,
+      updatePost,
+      deletePost
     }}>
       {children}
     </BlogContext.Provider>

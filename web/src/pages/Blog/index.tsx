@@ -22,21 +22,18 @@ export function Blog(){
     isEditing,
     changeIsEditingState,
     createPost, 
+    updatePost,
+    deletePost
   } = useBlog()
   const [postTitle, setPostTitle] = useState('')
   const [postContent, setPostContent] = useState('')
+  const [postId, setPostId] = useState('')
   
   useEffect(() =>{
     if(params && params.id && getBlogById){
       getBlogById(params.id)
     }
     
-  }, [])
-
-  useEffect(() =>{
-    if(user){
-      const isBlogOwner = specificBlog?.createdBy === user._id
-    }
   }, [])
   
   if(!specificBlog || isLoading && !isModalOpen){
@@ -65,13 +62,28 @@ export function Blog(){
     changeIsEditingState(false)
   }
 
-  function handleOpenModal(title: string = '', content: string = ''){
+  function handleOpenModal(_id?: string, title: string = '', content: string = ''){
     openModal()
-    if(title && content){
-      changeIsEditingState(true)
+    if(title && content && _id && specificBlog){
+      if(specificBlog.posts.length > 0){
+        changeIsEditingState(true)
+        setPostId(_id)
+      }
     }
     setPostTitle(title)
     setPostContent(content)
+  }
+
+  function handleUpdatePost(){
+    if(specificBlog){
+      updatePost(specificBlog._id,postId, postTitle, postContent)
+    }
+  }
+
+  function handleDeletePost(){
+    if(specificBlog){
+      deletePost(specificBlog._id, postId)
+    }
   }
   
   return(
@@ -115,10 +127,18 @@ export function Blog(){
               {isEditing ? (
                 <div>
                   <div className={styles.editButtonsWrapper}>
-                    <button type="submit" className={styles.deleteButton}>
+                    <button 
+                      type="button" 
+                      className={styles.deleteButton}
+                      onClick={handleDeletePost}
+                    >
                       {isLoading ? <Loader /> : 'Delete'}
                     </button>
-                    <button type="submit" className={styles.editButton}>
+                    <button 
+                      type="button" 
+                      className={styles.editButton}
+                      onClick={handleUpdatePost}
+                    >
                       {isLoading ? <Loader /> : 'Edit'}
                     </button>
                   </div>

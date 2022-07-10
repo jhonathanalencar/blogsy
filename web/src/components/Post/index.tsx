@@ -1,8 +1,9 @@
 import styles from './styles.module.scss'
+import { useState } from 'react';
 import { FaEdit } from 'react-icons/fa'
 import { useBlog } from '../../hooks/useBlog';
 import { useAuth } from '../../hooks/useAuth';
-import { useState } from 'react';
+import { format } from 'date-fns'
 
 interface PostProps{
   _id: string;
@@ -12,23 +13,25 @@ interface PostProps{
   createdBy: string;
   createdAtBlog: string;
   isFavorited: boolean;
-  handleOpenModal: (title: string, content: string) => void;
+  handleOpenModal: (_id: string, title: string, content: string) => void;
 }
 
 export function Post({_id, title, text, publishedAt, handleOpenModal}: PostProps){
   const [readMore, setReadMore] = useState(false)
   const { specificBlog } = useBlog()
   const { user } = useAuth()
+
+  const parsedDate = format(new Date(publishedAt), "EEEE, MMM dd, yyyy 'at' p")
   return(
     <div className={styles.container}>
       <header>
-        <span>{publishedAt.toString()}</span>
+        <span>{parsedDate}</span>
         <div className={styles.buttonsWrapper}>
           {specificBlog?.createdBy === user?._id && (
             <button
               type="button"
               className={styles.editButton}
-              onClick={ () => handleOpenModal(title, text)}
+              onClick={ () => handleOpenModal(_id, title, text)}
             >
               <FaEdit />
             </button>
