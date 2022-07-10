@@ -7,8 +7,12 @@ interface BlogContextData{
   blog: BlogType | null;
   specificBlog: BlogType | null;
   currentBlogCode: string;
+  isModalOpen: boolean;
+  openModal: () => void;
+  closeModal: () => void;
   createBlog: (name: string, userId: string) => void
   getBlogById: (blogId: string) => void
+  createPost: (title: string, text: string, blogId: string) => void
 }
 
 interface BlogContextProviderProps{
@@ -16,10 +20,13 @@ interface BlogContextProviderProps{
 }
 
 interface Post{
+  _id: string;
   title: string;
   text: string;
   publishedAt: Date;
-  isFavorited: string;
+  isFavorited: boolean;
+  createdBy: string;
+  createdAtBlog: string;
 }
 
 interface BlogType{
@@ -40,6 +47,7 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
   const [blog, setBlog] = useState<BlogType | null>(null)
   const [specificBlog, setSpecificBlog] = useState<BlogType | null>(null)
   const [currentBlogCode, setCurrentBlogCode] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const { changeError, changeIsLoading} = useAuth()
   const navigate = useNavigate()
 
@@ -61,22 +69,42 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
   async function getBlogById(blogId: string){
     changeIsLoading(true)
     try{
-      // const token = localStorage.getItem('@blogsy:token')
+      const response = await api.post<BlogTypeResponse>('/blogId', { blogId })
+      const { data } = response
       
-      // if(token){
-        // api.defaults.headers.common.authorization = `Bearer ${token}`
-        const response = await api.post<BlogTypeResponse>('/blogId', { blogId })
-        const { data } = response
-        
-        setSpecificBlog(data.blog)
-        setCurrentBlogCode(data.blog._id)
-      // }
+      setSpecificBlog(data.blog)
+      setCurrentBlogCode(data.blog._id)
     }catch(error: any){
       console.log(error)
     }
     setTimeout(() =>{
       changeIsLoading(false)
     }, 1000)
+  }
+
+  async function createPost(title: string, text: string, blogId: string){
+    changeIsLoading(true)
+    try{
+      await api.post('/createPost', { title, text })
+
+      await getBlogById(blogId)
+      closeModal()
+      changeError('')
+    }catch(error: any){
+      const { data } = error.response
+      changeError(data.msg)
+    }
+    changeIsLoading(false)
+  }
+
+  function openModal(){
+    setIsModalOpen(true)
+    changeError('')
+  }
+
+  function closeModal(){
+    setIsModalOpen(false)
+    changeError('')
   }
 
   const token = localStorage.getItem('@blogsy:token')
@@ -96,8 +124,12 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
       blog,
       specificBlog,
       currentBlogCode,
+      isModalOpen,
+      openModal,
+      closeModal,
       createBlog,
-      getBlogById
+      getBlogById,
+      createPost
     }}>
       {children}
     </BlogContext.Provider>

@@ -1,11 +1,20 @@
 import styles from './styles.module.scss'
-import { BsSuitHeart } from 'react-icons/bs'
 
-export function Post(){
+interface PostProps{
+  _id: string;
+  title: string;
+  text: string;
+  publishedAt: Date;
+  createdBy: string;
+  createdAtBlog: string;
+  isFavorited: boolean;
+}
+
+export function Post({_id, title, text, publishedAt}: PostProps){
   return(
     <div className={styles.container}>
       <header>
-        <span>02 jul, 2021</span>
+        <span>{publishedAt.toString()}</span>
         <button
           type="button"
         >
@@ -13,8 +22,8 @@ export function Post(){
         </button>
       </header>
       <div className={styles.content}>
-        <strong>Agora é oficial: o Windows 11 está vindo</strong>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut recusandae dolor hic corrupti totam ipsum voluptas incidunt ea facilis. Harum?</p>
+        <strong>{title}</strong>
+        <p>{text}</p>
       </div>
     </div>
   )
