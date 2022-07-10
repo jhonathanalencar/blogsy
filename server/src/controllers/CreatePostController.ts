@@ -4,7 +4,7 @@ import { CreatePostService } from '../services/CreatePostService';
 
 interface IUserRequest{
   user: {
-    userId: string;
+    _id: string;
     name: string;
   }
 }
@@ -17,7 +17,7 @@ interface IRequestBody{
 
 class CreatePostController{
   async handle(req: Request & IUserRequest, res: Response){
-    req.body.createdBy = req.user.userId
+    req.body.createdBy = req.user._id
 
     const { title, text, createdBy } = <IRequestBody>req.body
 

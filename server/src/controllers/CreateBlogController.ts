@@ -5,14 +5,14 @@ import { CreateBlogService } from '../services/CreateBlogService';
 
 interface IUserRequest{
   user: {
-    userId: string;
+    _id: string;
     name: string;
   }
 }
 
 class CreateBlogController{
   async handle(req: Request & IUserRequest, res: Response){
-    req.body.createdBy = req.user.userId
+    req.body.createdBy = req.user._id
     const { name, createdBy } = req.body
 
     if(!name){

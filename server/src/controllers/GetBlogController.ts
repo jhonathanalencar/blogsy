@@ -4,17 +4,17 @@ import { GetBlogService } from '../services/GetBlogService';
 
 interface UserType{
   user: {
-    userId: string;
+    _id: string;
     name: string;
   }
 }
 
 class GetBlogController{
   async handle(req: Request & UserType, res: Response){
-    req.body.createdBy = req.user.userId
+    req.body.createdBy = req.user._id
     const { user } = req
     const service = new GetBlogService()
-    const result = await service.execute(user?.userId)
+    const result = await service.execute(user?._id)
 
     return res.status(StatusCodes.OK).json(result)
   }

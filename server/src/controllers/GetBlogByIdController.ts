@@ -4,7 +4,7 @@ import { GetBlogByIdService } from '../services/GetBlogByIdService';
 
 interface UserType{
   user: {
-    userId: string;
+    _id: string;
     name: string;
   }
 }
