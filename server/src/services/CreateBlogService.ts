@@ -1,11 +1,9 @@
 import { BadRequestError } from "../errors";
 import { Blog } from "../models/Blog";
-import { Post } from "../models/Post";
 
 class CreateBlogService {
   async execute(name: string, userId: string){
-    const parsedName = name.toLowerCase()
-    const hasName = await Blog.findOne({ name: parsedName })
+    const hasName = await Blog.findOne({ name: new RegExp(`^${name}$`, 'i') })
     if(hasName){
       throw new BadRequestError(`A blog already exists with this name. Please choose another name`)
     }
