@@ -12,13 +12,30 @@ export function Blog(){
   const params = useParams()
   const navigate = useNavigate()
   const { signOut, isLoading, user, error, changeError } = useAuth()
-  const { getBlogById, specificBlog, isModalOpen, openModal, closeModal, createPost } = useBlog()
+  const {
+    blog, 
+    getBlogById, 
+    specificBlog, 
+    isModalOpen, 
+    openModal, 
+    closeModal, 
+    isEditing,
+    changeIsEditingState,
+    createPost, 
+  } = useBlog()
   const [postTitle, setPostTitle] = useState('')
   const [postContent, setPostContent] = useState('')
   
   useEffect(() =>{
     if(params && params.id && getBlogById){
       getBlogById(params.id)
+    }
+    
+  }, [])
+
+  useEffect(() =>{
+    if(user){
+      const isBlogOwner = specificBlog?.createdBy === user._id
     }
   }, [])
   
@@ -45,12 +62,16 @@ export function Blog(){
     closeModal()
     setPostTitle('')
     setPostContent('')
+    changeIsEditingState(false)
   }
 
-  function handleOpenModal(){
+  function handleOpenModal(title: string = '', content: string = ''){
     openModal()
-    setPostTitle('')
-    setPostContent('')
+    if(title && content){
+      changeIsEditingState(true)
+    }
+    setPostTitle(title)
+    setPostContent(content)
   }
   
   return(
@@ -78,7 +99,7 @@ export function Blog(){
               <GoX />
             </button>
             <form onSubmit={handleCreatePost}>
-              <strong>Add new post</strong>
+              <strong>{isEditing ? 'Edit Post' : 'Add new post'}</strong>
               <span className={styles.errorText}>{error}</span>
               <input 
                 type="text" 
@@ -91,9 +112,22 @@ export function Blog(){
                 value={postContent}
                 onChange={e => setPostContent(e.target.value)}
               />
-              <button type="submit">
-                {isLoading ? <Loader /> : 'publish'}
-              </button>
+              {isEditing ? (
+                <div>
+                  <div className={styles.editButtonsWrapper}>
+                    <button type="submit" className={styles.deleteButton}>
+                      {isLoading ? <Loader /> : 'Delete'}
+                    </button>
+                    <button type="submit" className={styles.editButton}>
+                      {isLoading ? <Loader /> : 'Edit'}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button type="submit">
+                  {isLoading ? <Loader /> : 'publish'}
+                </button>
+              )}
             </form>
           </div>
         </div>
@@ -118,16 +152,18 @@ export function Blog(){
             </button>
             <input type="text" placeholder='search in blog' />
           </form>
-          <div className={styles.createPostButtonWrapper}>
-            <button
-              type="button"
-              className={styles.createPostButton}
-              onClick={handleOpenModal}
-            >
-              <span>New post</span>
-              <BiPlusCircle />
-            </button>
-          </div>
+          {specificBlog.createdBy === user?._id && (
+            <div className={styles.createPostButtonWrapper}>
+              <button
+                type="button"
+                className={styles.createPostButton}
+                onClick={ () => handleOpenModal()}
+              >
+                <span>New post</span>
+                <BiPlusCircle />
+              </button>
+            </div>
+          )}
         </div>
       </nav>
       <main className={styles.main}>
@@ -136,7 +172,7 @@ export function Blog(){
             <div className={styles.postsWrapper}>
               {specificBlog.posts.map((post) =>{
                 return(
-                  <Post {...post} key={post._id} />
+                  <Post {...post} key={post._id} handleOpenModal={handleOpenModal} />
                 )
               })}
             </div>

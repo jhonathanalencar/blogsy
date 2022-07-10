@@ -42,7 +42,7 @@ export function Signin(){
     }
 
     if(createBlog && user){
-      createBlog(blogName, user.id)
+      createBlog(blogName, user._id)
     }
   }
 

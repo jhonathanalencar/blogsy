@@ -1,14 +1,36 @@
 .container{
   background-color: #fff;
   padding: 1rem;
+  padding-top: 2rem;
   border-radius: .25rem;
   color: #2b2b2b;
 
   header{
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 1.5rem;
+    margin-bottom: .5rem;
+
+    .buttonsWrapper{
+      display: flex;
+      align-items: flex-start;
+
+      .editButton{
+        color: #a9757f;
+        margin-right: .5rem;
+        transition: all .3s ease-in-out;
+
+        &:hover{
+          color: #f1a7b5;
+        }
+      }
+
+      .favoritedAmount{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
 
     button{
       background: none;
@@ -32,6 +54,28 @@
       font-size: 1.5rem;
       margin-bottom: .5rem;
       display: block;
+      word-wrap: break-word;
+    }
+
+    p{
+      word-wrap: break-word;
+      line-height: 1.5;
+      text-align: justify;
+    }
+
+    .readMoreButton{
+      background: none;
+      border: none;
+      margin-left: .25rem;
+      cursor: pointer;
+      text-transform: capitalize;
+      color: #a9757f;
+      font-size: .875rem;
+      transition: color .3s linear;
+
+      &:hover{
+        color: #f1a7b5;
+      }
     }
   }
 }

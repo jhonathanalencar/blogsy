@@ -8,11 +8,14 @@ interface BlogContextData{
   specificBlog: BlogType | null;
   currentBlogCode: string;
   isModalOpen: boolean;
+  isEditing: boolean;
   openModal: () => void;
   closeModal: () => void;
-  createBlog: (name: string, userId: string) => void
-  getBlogById: (blogId: string) => void
-  createPost: (title: string, text: string, blogId: string) => void
+  resetCurrentBlogCode: () => void;
+  changeIsEditingState: (state: boolean) => void;
+  createBlog: (name: string, userId: string) => void;
+  getBlogById: (blogId: string) => void;
+  createPost: (title: string, text: string, blogId: string) => void;
 }
 
 interface BlogContextProviderProps{
@@ -48,6 +51,8 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
   const [specificBlog, setSpecificBlog] = useState<BlogType | null>(null)
   const [currentBlogCode, setCurrentBlogCode] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+
   const { changeError, changeIsLoading} = useAuth()
   const navigate = useNavigate()
 
@@ -75,7 +80,7 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
       setSpecificBlog(data.blog)
       setCurrentBlogCode(data.blog._id)
     }catch(error: any){
-      console.log(error)
+      // console.log(error)
     }
     setTimeout(() =>{
       changeIsLoading(false)
@@ -107,6 +112,14 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
     changeError('')
   }
 
+  function resetCurrentBlogCode(){
+    setCurrentBlogCode('')
+  }
+
+  function changeIsEditingState(state: boolean){
+    setIsEditing(state)
+  }
+
   const token = localStorage.getItem('@blogsy:token')
 
   useEffect(() =>{
@@ -125,8 +138,11 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
       specificBlog,
       currentBlogCode,
       isModalOpen,
+      isEditing,
       openModal,
       closeModal,
+      resetCurrentBlogCode,
+      changeIsEditingState,
       createBlog,
       getBlogById,
       createPost

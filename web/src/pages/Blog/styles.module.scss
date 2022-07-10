@@ -42,7 +42,7 @@
       transition: color .3s ease-in-out;
 
       &:hover{
-        color: #bd98c5;
+        color: #cc3321;
       }
     }
 
@@ -124,6 +124,26 @@
         &:hover{
           background-color: #977a9e;
           border: .2rem solid #977a9e;
+        }
+      }
+
+      div{
+        width: 100%;
+
+        .editButtonsWrapper{
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+  
+          .deleteButton {
+            align-self: flex-start;
+            background-color: #cc3321;
+            border-color: #cc3321;
+
+            &:hover{
+              opacity: .7;
+            }
+          }
         }
       }
     }

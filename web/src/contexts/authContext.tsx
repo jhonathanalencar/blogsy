@@ -19,7 +19,7 @@ interface AuthContextProviderProps{
 }
 
 interface UserType{
-  id: string;
+  _id: string;
   name: string;
   email: string;
   password: string;
@@ -37,7 +37,7 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
-  const { currentBlogCode } = useBlog()
+  const { currentBlogCode, resetCurrentBlogCode } = useBlog()
 
   async function signUp(name: string, email: string, password: string){
     setIsLoading(true)
@@ -52,6 +52,7 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
       // setUser(user)
       changeError('')
       navigate('/signin')
+      resetCurrentBlogCode()
     }catch(error: any){
       const { data } = error.response
 
