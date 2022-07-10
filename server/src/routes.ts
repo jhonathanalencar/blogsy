@@ -2,10 +2,12 @@ import { Router } from 'express'
 import { AuthenticateUserController } from './controllers/AuthenticateUserController'
 import { CreateBlogController } from './controllers/CreateBlogController'
 import { CreatePostController } from './controllers/CreatePostController'
+import { DeletePostController } from './controllers/DeletePostController'
 import { GetBlogByIdController } from './controllers/GetBlogByIdController'
 import { GetBlogController } from './controllers/GetBlogController'
 import { GetUserController } from './controllers/GetUserController'
 import { RegisterUserController } from './controllers/RegisterUserController'
+import { UpdatePostController } from './controllers/UpadtePostController'
 import { authenticationMiddleware } from './middlewares/ensureAuthenticated'
 
 export const router = Router()
@@ -18,4 +20,6 @@ router.post('/createBlog', authenticationMiddleware, new CreateBlogController().
 router.get('/blog', authenticationMiddleware, new GetBlogController().handle)
 router.post('/blogId', new GetBlogByIdController().handle)
 
-router.post('/createPost', authenticationMiddleware, new CreatePostController().handle)
+router.post('/post', authenticationMiddleware, new CreatePostController().handle)
+router.patch('/post', authenticationMiddleware, new UpdatePostController().handle)
+router.delete('/post', authenticationMiddleware, new DeletePostController().handle)
