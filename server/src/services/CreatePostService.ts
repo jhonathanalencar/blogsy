@@ -7,7 +7,7 @@ class CreatePostService{
     const blog = await Blog.findOne({ createdBy: userId })
     const { _id: blogId } = blog
 
-    const hasTitle = await Post.findOne({ title: new RegExp(`^${title}$`, 'i')})
+    const hasTitle = await Post.findOne({ title: new RegExp(`^${title}$`, 'i'), createdBy: userId})
     if(hasTitle){
       throw new BadRequestError(`A post with this title already exists.`)
     }

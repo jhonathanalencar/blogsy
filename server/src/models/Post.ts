@@ -1,10 +1,11 @@
-import mongoose from 'mongoose'
+import mongoose, { Types } from 'mongoose'
+import { IFavorite } from './Favorite';
 
 export interface IPost{
   title: string;
   text: string;
   publishedAt: Date;
-  isFavorited: boolean;
+  favorites: Types.DocumentArray<IFavorite>;
   createdBy: mongoose.Schema.Types.ObjectId;
   createdAtBlog: mongoose.Schema.Types.ObjectId;
 }
@@ -14,7 +15,6 @@ const PostSchema = new mongoose.Schema<IPost>({
     type: String,
     required: [true, 'Please provide title'],
     maxlength: 100,
-    unique: true
   },
   text: {
     type: String,
@@ -35,10 +35,7 @@ const PostSchema = new mongoose.Schema<IPost>({
     ref: 'Blog',
     required: true
   },
-  isFavorited: {
-    type: Boolean,
-    default: false
-  }
+  favorites: [{type: mongoose.Schema.Types.ObjectId, ref: 'Favorite'}]
 })
 
 export const Post = mongoose.model<IPost>('Post', PostSchema)

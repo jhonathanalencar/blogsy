@@ -1,4 +1,5 @@
 import { Blog } from "../models/Blog";
+import { Favorite } from "../models/Favorite";
 import { Post } from "../models/Post";
 
 class GetBlogService{

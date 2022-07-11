@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { AddFavoriteController } from './controllers/AddFavoriteController'
 import { AuthenticateUserController } from './controllers/AuthenticateUserController'
 import { CreateBlogController } from './controllers/CreateBlogController'
 import { CreatePostController } from './controllers/CreatePostController'
@@ -23,3 +24,5 @@ router.post('/blogId', new GetBlogByIdController().handle)
 router.post('/post', authenticationMiddleware, new CreatePostController().handle)
 router.patch('/post', authenticationMiddleware, new UpdatePostController().handle)
 router.delete('/post', authenticationMiddleware, new DeletePostController().handle)
+
+router.post('/favorite', authenticationMiddleware, new AddFavoriteController().handle)

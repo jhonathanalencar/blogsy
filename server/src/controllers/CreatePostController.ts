@@ -9,20 +9,14 @@ interface IUserRequest{
   }
 }
 
-interface IRequestBody{
-  title: string;
-  text: string;
-  createdBy: string;
-}
-
 class CreatePostController{
   async handle(req: Request & IUserRequest, res: Response){
-    req.body.createdBy = req.user._id
+    req.body.userId = req.user._id
 
-    const { title, text, createdBy } = <IRequestBody>req.body
+    const { title, text, userId } = req.body
 
     const service = new CreatePostService()
-    const result = await service.execute(title, text, createdBy)
+    const result = await service.execute(title, text, userId)
 
     res.status(StatusCodes.CREATED).json(result)
   }

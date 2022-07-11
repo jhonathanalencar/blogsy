@@ -1,4 +1,5 @@
 import { Blog } from "../models/Blog";
+import { Favorite } from "../models/Favorite";
 import { Post } from "../models/Post";
 
 class GetBlogByIdService{
@@ -7,7 +8,9 @@ class GetBlogByIdService{
     const posts = await Post.find({ createdAtBlog: blogId })
       .sort({publishedAt: 'desc'})
 
-    posts.map((post) => blog.posts.push(post))
+    posts.map((post) => {
+      blog.posts.push(post)
+    })
 
     return { blog }
   }
