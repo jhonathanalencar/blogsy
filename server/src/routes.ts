@@ -4,6 +4,7 @@ import { AuthenticateUserController } from './controllers/AuthenticateUserContro
 import { CreateBlogController } from './controllers/CreateBlogController'
 import { CreatePostController } from './controllers/CreatePostController'
 import { DeletePostController } from './controllers/DeletePostController'
+import { GetAllFavoritesByIdController } from './controllers/GetAllFavoritesByIdController'
 import { GetBlogByIdController } from './controllers/GetBlogByIdController'
 import { GetBlogController } from './controllers/GetBlogController'
 import { GetUserController } from './controllers/GetUserController'
@@ -26,3 +27,4 @@ router.patch('/post', authenticationMiddleware, new UpdatePostController().handl
 router.delete('/post', authenticationMiddleware, new DeletePostController().handle)
 
 router.post('/favorite', authenticationMiddleware, new AddFavoriteController().handle)
+router.post('/allFavorites', authenticationMiddleware, new GetAllFavoritesByIdController().handle)
