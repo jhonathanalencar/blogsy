@@ -9,6 +9,7 @@ interface BlogContextData{
   currentBlogCode: string;
   isModalOpen: boolean;
   isEditing: boolean;
+  postFavorites: Favorite[];
   openModal: () => void;
   closeModal: () => void;
   resetCurrentBlogCode: () => void;
@@ -18,10 +19,19 @@ interface BlogContextData{
   createPost: (blogId: string, title: string, text: string) => void;
   updatePost: (blogId: string, postId: string, title: string, text: string) => void;
   deletePost: (blogId: string, postId: string) => void;
+  favoritePost: (userId: string, blogId: string, postId: string) => void;
+  updatePostFavorites: (postId: string) => void;
 }
 
 interface BlogContextProviderProps{
   children: ReactNode;
+}
+
+interface Favorite{
+  _id: string;
+  favoritedBy: string;
+  isFavorited: boolean;
+  publishedPost: string;
 }
 
 interface Post{
@@ -29,9 +39,9 @@ interface Post{
   title: string;
   text: string;
   publishedAt: Date;
-  isFavorited: boolean;
   createdBy: string;
   createdAtBlog: string;
+  favorites: Favorite[];
 }
 
 interface BlogType{
@@ -54,6 +64,7 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
   const [currentBlogCode, setCurrentBlogCode] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [postFavorites, setPostFavorites] = useState<Favorite[]>([])
 
   const { changeError, changeIsLoading} = useAuth()
   const navigate = useNavigate()
@@ -82,7 +93,7 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
       setSpecificBlog(data.blog)
       setCurrentBlogCode(data.blog._id)
     }catch(error: any){
-      // console.log(error)
+      console.log(error)
     }
     setTimeout(() =>{
       changeIsLoading(false)
@@ -134,6 +145,28 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
     changeIsLoading(false)
   }
 
+  async function favoritePost(userId: string, blogId: string, publishedPost: string){
+    try{
+      await api.post('/favorite', { userId, publishedPost })
+
+      await updatePostFavorites(blogId)
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  async function updatePostFavorites(blogId: string){
+    try{
+      const response = await api.post<BlogTypeResponse>('/blogId', { blogId })
+      const { data } = response
+      
+      setSpecificBlog(data.blog)
+      setCurrentBlogCode(data.blog._id)
+    }catch(error: any){
+      console.log(error)
+    }
+  }
+
   function openModal(){
     setIsModalOpen(true)
     changeError('')
@@ -171,6 +204,7 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
       currentBlogCode,
       isModalOpen,
       isEditing,
+      postFavorites,
       openModal,
       closeModal,
       resetCurrentBlogCode,
@@ -179,7 +213,9 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
       getBlogById,
       createPost,
       updatePost,
-      deletePost
+      deletePost,
+      favoritePost,
+      updatePostFavorites
     }}>
       {children}
     </BlogContext.Provider>

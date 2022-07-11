@@ -29,6 +29,12 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+
+        .favorited{
+          path{
+            fill: #bd98c5;
+          }
+        }
       }
     }
 

@@ -23,7 +23,8 @@ export function Blog(){
     changeIsEditingState,
     createPost, 
     updatePost,
-    deletePost
+    deletePost,
+    postFavorites
   } = useBlog()
   const [postTitle, setPostTitle] = useState('')
   const [postContent, setPostContent] = useState('')
