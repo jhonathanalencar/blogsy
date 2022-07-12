@@ -28,7 +28,7 @@ export function Signup(){
     const token = localStorage.getItem('@blogsy:token')
 
     if(token){
-      navigate('/signin')
+      navigate('/')
     }
   }, [user])
 
@@ -44,7 +44,7 @@ export function Signup(){
         <div className={styles.mainCenter}>
           <div className={styles.formWrapper}>
             <strong>Create an account</strong>
-            <span>Already have an account? <Link to="/signin">Sign in</Link></span>
+            <span>Already have an account? <Link to="/">Sign in</Link></span>
             <span className={styles.errorText}>{error}</span>
             <form onSubmit={handleSubmit}>
               <label htmlFor="name">

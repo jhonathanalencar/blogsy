@@ -9,13 +9,14 @@ interface BlogContextData{
   currentBlogCode: string;
   isModalOpen: boolean;
   isEditing: boolean;
-  postFavorites: Favorite[];
   openModal: () => void;
   closeModal: () => void;
   resetCurrentBlogCode: () => void;
   changeIsEditingState: (state: boolean) => void;
   createBlog: (name: string, userId: string) => void;
   getBlogById: (blogId: string) => void;
+  accessPersonalBlog: () => void;
+  accessBlogByCode: (blogId: string) => Promise<boolean>;
   createPost: (blogId: string, title: string, text: string) => void;
   updatePost: (blogId: string, postId: string, title: string, text: string) => void;
   deletePost: (blogId: string, postId: string) => void;
@@ -64,7 +65,6 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
   const [currentBlogCode, setCurrentBlogCode] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  const [postFavorites, setPostFavorites] = useState<Favorite[]>([])
 
   const { changeError, changeIsLoading} = useAuth()
   const navigate = useNavigate()
@@ -94,10 +94,27 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
       setCurrentBlogCode(data.blog._id)
     }catch(error: any){
       console.log(error)
+      navigate('/')
     }
     setTimeout(() =>{
       changeIsLoading(false)
     }, 1000)
+  }
+
+  async function accessBlogByCode(blogId: string){
+    let error = false
+    try{
+      const response = await api.post<BlogTypeResponse>('/blogId', { blogId })
+      const { data } = response
+      
+      setSpecificBlog(data.blog)
+      setCurrentBlogCode(data.blog._id)
+      navigate(`/blog/${blogId}`)
+    }catch(error: any){
+      console.log(error)
+      error = true
+    }
+    return error
   }
 
   async function createPost(title: string, text: string, blogId: string){
@@ -187,7 +204,7 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
 
   const token = localStorage.getItem('@blogsy:token')
 
-  useEffect(() =>{
+  function accessPersonalBlog(){
     if(token){
       api.defaults.headers.common.authorization = `Bearer ${token}`
 
@@ -195,7 +212,7 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
         setBlog(response.data.blog)
       })
     }
-  }, [token])
+  }
 
   return(
     <BlogContext.Provider value={{
@@ -204,13 +221,14 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
       currentBlogCode,
       isModalOpen,
       isEditing,
-      postFavorites,
       openModal,
       closeModal,
       resetCurrentBlogCode,
       changeIsEditingState,
       createBlog,
       getBlogById,
+      accessPersonalBlog,
+      accessBlogByCode,
       createPost,
       updatePost,
       deletePost,

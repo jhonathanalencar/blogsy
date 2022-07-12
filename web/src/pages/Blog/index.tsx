@@ -7,13 +7,13 @@ import { useBlog } from '../../hooks/useBlog'
 import { FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Loader } from '../../components/Loader'
+import { Link } from 'react-router-dom'
 
 export function Blog(){
   const params = useParams()
   const navigate = useNavigate()
   const { signOut, isLoading, user, error, changeError } = useAuth()
   const {
-    blog, 
     getBlogById, 
     specificBlog, 
     isModalOpen, 
@@ -24,7 +24,7 @@ export function Blog(){
     createPost, 
     updatePost,
     deletePost,
-    postFavorites
+    resetCurrentBlogCode
   } = useBlog()
   const [postTitle, setPostTitle] = useState('')
   const [postContent, setPostContent] = useState('')
@@ -34,14 +34,7 @@ export function Blog(){
     if(params && params.id && getBlogById){
       getBlogById(params.id)
     }
-    
   }, [])
-  
-  if(!specificBlog || isLoading && !isModalOpen){
-    return(
-      <Loader />
-    )
-  }
   
   function handleCreatePost(e: FormEvent){
     e.preventDefault()
@@ -86,15 +79,37 @@ export function Blog(){
       deletePost(specificBlog._id, postId)
     }
   }
+
+  function handleBackToHome(){
+    resetCurrentBlogCode()
+    const url = window.location.href
+    const [urlWithoutCode,] = url.split('/blog')
+    window.history.pushState({}, '', urlWithoutCode)
+    window.location.reload()
+  }
+
+  if(!specificBlog || isLoading && !isModalOpen){
+    return(
+      <div className={styles.loaderDiv}>
+        <Loader />
+      </div>
+    )
+  }
   
   return(
     <div 
       className={styles.container} style={isModalOpen ? {height: '100vh', overflow: 'hidden'} : {} }
     >
       <button
+        type="button"
+        className={styles.homeButton}
+        onClick={handleBackToHome}
+      >
+        Home</button>
+      <button
         type="button" 
         className={styles.signoutButton}
-        onClick={user ? signOut : () => navigate('/signin')}
+        onClick={user ? signOut : () => navigate('/')}
       >
         {user ? <GoSignOut /> : <GoSignIn /> }
         <span>

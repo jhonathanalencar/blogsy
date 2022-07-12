@@ -8,7 +8,9 @@ import { useBlog } from '../../hooks/useBlog'
 
 export function Signin(){
   const [blogName, setBlogName] = useState('')
-  const { createBlog, blog, currentBlogCode } = useBlog()
+  const [accessCode, setAccessCode] = useState('')
+  const [accessCodeError, setAccessCodeError] = useState('')
+  const { createBlog, blog, currentBlogCode, accessBlogByCode, accessPersonalBlog } = useBlog()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -45,6 +47,24 @@ export function Signin(){
       createBlog(blogName, user._id)
     }
   }
+
+  async function handleAccessBlog(){
+    if(accessCode.trim() === ''){
+      setAccessCodeError('Please insert a code')
+      return;
+    }
+
+    if(accessBlogByCode){
+      accessBlogByCode(accessCode)
+    }
+  }
+
+  function handleNavigateToBlog(){
+    if(accessPersonalBlog && user){
+      accessPersonalBlog()
+    }
+  }
+
 
   useEffect(() =>{
     if(token){
@@ -107,22 +127,32 @@ export function Signin(){
               <div className={styles.createBlogWrapper}>
                 <span className={styles.errorText}>{error}</span>
                 <div className={styles.createButtonWrapper}>
-                  {!blog && (
-                    <input 
-                      type="text" 
-                      placeholder="Blog name"
-                      autoComplete="new-blog"
-                      value={blogName}
-                      onChange={e => setBlogName(e.target.value)}
-                    />
+                  {blog ? (
+                    <>
+                      <input 
+                        type="text" 
+                        placeholder="Blog name"
+                        autoComplete="new-blog"
+                        value={blogName}
+                        onChange={e => setBlogName(e.target.value)}
+                      />
+                      <button 
+                        type="button"
+                        className={styles.createButton}
+                        onClick={handleCreateBlog}
+                      >
+                        {isLoading ? <Loader /> : 'Create a blog'}
+                      </button>
+                    </>
+                  ) : (
+                    <button 
+                      type="button"
+                      className={styles.createButton}
+                      onClick={handleNavigateToBlog}
+                    >
+                      Access blog
+                    </button>
                   )}
-                  <button 
-                    type="button"
-                    className={styles.createButton}
-                    onClick={handleCreateBlog}
-                  >
-                    {isLoading ? <Loader /> : 'Create a blog'}
-                  </button>
                 </div>
                 <button 
                   type="button" 
@@ -140,9 +170,19 @@ export function Signin(){
           </div>
           <div className={styles.codeInputWrapper}>
             <strong>access a blog</strong>
+            <span className={styles.accessCodeErrorText}>{accessCodeError}</span>
             <div className={styles.codeInput}>
-              <input type="text" placeholder='Code' />
-              <button type="button">Access</button>
+              <input 
+                type="text" 
+                placeholder='Code' 
+                value={accessCode}
+                onChange={e => setAccessCode(e.target.value)}
+              />
+              <button 
+                type="button"
+                onClick={handleAccessBlog}
+              >
+                Access</button>
             </div>
           </div>
         </div>

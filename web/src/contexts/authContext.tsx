@@ -43,18 +43,12 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
     setIsLoading(true)
     try{
       const response = await api.post<Response>('/register', { name, email, password })
-      const { user, token } = response.data
-
-      // localStorage.setItem('@blogsy:token', token)
-
-      // api.defaults.headers.common.authorization = `Bearer ${token}`
-
-      // setUser(user)
+      
       changeError('')
       navigate('/signin')
       resetCurrentBlogCode()
     }catch(error: any){
-      const { data } = error.response
+      const { data } = error.response ?? ''
 
       if(data?.msg){
         setError(data.msg)

@@ -26,7 +26,7 @@ interface PostProps{
 export function Post({_id, title, text, publishedAt, handleOpenModal, createdAtBlog, favorites}: PostProps){
   const [readMore, setReadMore] = useState(false)
   const [isPostFavoritedByUser, setIsPostFavoritedByUser] = useState(false)
-  const { specificBlog, favoritePost, postFavorites } = useBlog()
+  const { specificBlog, favoritePost } = useBlog()
   const { user } = useAuth()
   
   const parsedDate = format(new Date(publishedAt), "EEEE, MMM dd, yyyy 'at' p")

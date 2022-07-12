@@ -195,7 +195,17 @@
 
 .codeInputWrapper{
   width: 100%;
-    max-width: 400px;
+  max-width: 400px;
+
+  .accessCodeErrorText{
+    display: block;
+    margin-bottom: 1rem;
+    color: #cc3321;
+    text-transform: capitalize;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+  }
 
   strong{
     color: #2b2b2b;

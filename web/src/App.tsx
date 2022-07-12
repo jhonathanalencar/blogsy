@@ -12,7 +12,7 @@ export function App() {
       <AuthContextProvider>
         <BlogContextProvider>
           <Routes>
-            <Route path="signin" element={<Signin />} />
+            <Route path="/" element={<Signin />} />
             <Route path="signup" element={<Signup />} />
             <Route path="blog/:id" element={<Blog />} />
             <Route path="*" element={<Signin />} />
