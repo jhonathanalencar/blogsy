@@ -65,9 +65,8 @@ export function Signin(){
     }
   }
 
-
   useEffect(() =>{
-    if(token){
+    if(token && user){
       setIsAuthenticated(true)
       setEmail('')
       setPassword('')
@@ -81,6 +80,12 @@ export function Signin(){
       changeError('')
     }
   }, [])
+
+  useEffect(() =>{
+    if(accessPersonalBlog){
+      accessPersonalBlog()
+    }
+  }, [user])
 
   useEffect(() =>{
     if(blog && user){
@@ -99,7 +104,7 @@ export function Signin(){
         <div className={styles.center}>
           <div className={styles.loginWrapper}>
             <strong>Welcome to <span>blogsy</span></strong>
-            {!isAuthenticated ? (
+            {!user ? (
               <>
                 <span className={styles.errorText}>{error}</span>
                 <form onSubmit={handleSubmit}>
@@ -127,7 +132,7 @@ export function Signin(){
               <div className={styles.createBlogWrapper}>
                 <span className={styles.errorText}>{error}</span>
                 <div className={styles.createButtonWrapper}>
-                  {blog ? (
+                  {!blog ? (
                     <>
                       <input 
                         type="text" 

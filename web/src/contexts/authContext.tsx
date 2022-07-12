@@ -37,7 +37,7 @@ export function AuthContextProvider({children}: AuthContextProviderProps){
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
-  const { currentBlogCode, resetCurrentBlogCode } = useBlog()
+  const { currentBlogCode, resetCurrentBlogCode, accessPersonalBlog } = useBlog()
 
   async function signUp(name: string, email: string, password: string){
     setIsLoading(true)

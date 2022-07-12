@@ -29,6 +29,7 @@ export function Blog(){
   const [postTitle, setPostTitle] = useState('')
   const [postContent, setPostContent] = useState('')
   const [postId, setPostId] = useState('')
+  const [searchText, setSearchText] = useState('')
   
   useEffect(() =>{
     if(params && params.id && getBlogById){
@@ -82,10 +83,15 @@ export function Blog(){
 
   function handleBackToHome(){
     resetCurrentBlogCode()
-    const url = window.location.href
-    const [urlWithoutCode,] = url.split('/blog')
-    window.history.pushState({}, '', urlWithoutCode)
-    window.location.reload()
+    navigate('/')
+  }
+
+  function handleSearchPosts(e: FormEvent){
+    e.preventDefault()
+    
+    if(getBlogById && specificBlog){
+      getBlogById(specificBlog._id, searchText)
+    }
   }
 
   if(!specificBlog || isLoading && !isModalOpen){
@@ -182,11 +188,16 @@ export function Blog(){
               </button>
             </div>
           </header>
-          <form className={styles.searchForm}>
+          <form className={styles.searchForm} onSubmit={handleSearchPosts}>
             <button type="submit">
               <GoSearch />
             </button>
-            <input type="text" placeholder='search in blog' />
+            <input 
+              type="text" 
+              placeholder='search in blog' 
+              value={searchText}
+              onChange={e => setSearchText(e.target.value)}
+            />
           </form>
           {specificBlog.createdBy === user?._id && (
             <div className={styles.createPostButtonWrapper}>

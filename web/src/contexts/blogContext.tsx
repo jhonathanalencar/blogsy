@@ -14,7 +14,7 @@ interface BlogContextData{
   resetCurrentBlogCode: () => void;
   changeIsEditingState: (state: boolean) => void;
   createBlog: (name: string, userId: string) => void;
-  getBlogById: (blogId: string) => void;
+  getBlogById: (blogId: string, search?: string) => void;
   accessPersonalBlog: () => void;
   accessBlogByCode: (blogId: string) => Promise<boolean>;
   createPost: (blogId: string, title: string, text: string) => void;
@@ -66,7 +66,7 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  const { changeError, changeIsLoading} = useAuth()
+  const { changeError, changeIsLoading, user} = useAuth()
   const navigate = useNavigate()
 
   async function createBlog(name: string, userId: string){
@@ -84,14 +84,22 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
     changeIsLoading(false)
   }
 
-  async function getBlogById(blogId: string){
+  async function getBlogById(blogId: string, search?: string){
     changeIsLoading(true)
     try{
-      const response = await api.post<BlogTypeResponse>('/blogId', { blogId })
-      const { data } = response
+      if(search){
+        const response = await api.post<BlogTypeResponse>(`/blogId?search=${search}`, { blogId })
+        const { data } = response
       
-      setSpecificBlog(data.blog)
-      setCurrentBlogCode(data.blog._id)
+        setSpecificBlog(data.blog)
+        setCurrentBlogCode(data.blog._id)
+      }else{
+        const response = await api.post<BlogTypeResponse>('/blogId', { blogId })
+        const { data } = response
+        
+        setSpecificBlog(data.blog)
+        // setCurrentBlogCode(data.blog._id)
+      }
     }catch(error: any){
       console.log(error)
       navigate('/')
@@ -108,7 +116,7 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
       const { data } = response
       
       setSpecificBlog(data.blog)
-      setCurrentBlogCode(data.blog._id)
+      // setCurrentBlogCode(data.blog._id)
       navigate(`/blog/${blogId}`)
     }catch(error: any){
       console.log(error)
@@ -139,6 +147,7 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
       await getBlogById(blogId)
       closeModal()
       changeError('')
+      setIsEditing(false)
     }catch(error: any){
       const { data } = error.response
       changeError(data.msg)
@@ -178,7 +187,7 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
       const { data } = response
       
       setSpecificBlog(data.blog)
-      setCurrentBlogCode(data.blog._id)
+      // setCurrentBlogCode(data.blog._id)
     }catch(error: any){
       console.log(error)
     }
@@ -211,8 +220,16 @@ export function BlogContextProvider({children}: BlogContextProviderProps){
       api.get<BlogTypeResponse>('/blog').then(response => {
         setBlog(response.data.blog)
       })
+    }else{
+      setBlog(null)
     }
   }
+
+  useEffect(() =>{
+    if(token){
+      accessPersonalBlog()
+    }
+  }, [user])
 
   return(
     <BlogContext.Provider value={{
