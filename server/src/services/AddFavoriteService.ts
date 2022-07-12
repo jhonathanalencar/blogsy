@@ -7,6 +7,15 @@ class AddFavoriteService{
 
     const posts = await Post.find({ id: new mongoose.Types.ObjectId(publishedPost)})
 
+    const isFavorited = await Favorite.findOne({ 
+      favoritedBy: userId, publishedPost  
+    })
+
+    if(isFavorited){
+      await Favorite.deleteOne({_id: isFavorited._id})
+      return;
+    }
+
     const favorite = await Favorite.create({
       favoritedBy: userId,
       publishedPost: publishedPost
